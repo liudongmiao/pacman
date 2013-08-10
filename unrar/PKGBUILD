@@ -1,0 +1,27 @@
+#!/bin/bash
+
+pkgname=unrar
+pkgver=4.2.4
+pkgrel=1
+arch=('i686' 'x86_64')
+url="http://www.rarlab.com/rar_add.htm"
+license=('custom')
+pkgdesc="The RAR uncompression program"
+source=(http://www.rarlab.com/rar/unrarsrc-${pkgver}.tar.gz)
+
+build() {
+  cd "$srcdir/$pkgname"
+
+  make -f makefile.unix CXXFLAGS="-fPIC ${CXXFLAGS}" STRIP="true"
+}
+
+package() {
+  cd "$srcdir/$pkgname"
+
+  mkdir -p "$pkgdir/usr/local/bin"
+  install -m755 unrar "$pkgdir/usr/local/bin/unrar"
+  # install license
+  mkdir -p "$pkgdir/usr/local/share/licenses/$pkgname"
+  install -m644 license.txt "${pkgdir}/usr/local/share/licenses/${pkgname}/LICENSE"
+}
+md5sums=('8ea9d1b4139474b282d76e627a2de3e4')

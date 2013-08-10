@@ -1,0 +1,28 @@
+#!/bin/bash
+
+pkgname=lftp
+pkgver=4.4.8
+pkgrel=1
+pkgdesc="Sophisticated command line based FTP client"
+arch=('i686' 'x86_64')
+license=('GPL3')
+url="http://lftp.yar.ru/"
+backup=(usr/local/etc/lftp.conf)
+makedepends=('readline>6.0')
+source=(http://ftp.yars.free.net/pub/source/lftp/$pkgname-$pkgver.tar.bz2)
+md5sums=('7140263fbe12f17f74183cf065a7d381')
+
+build() {
+  cd $srcdir/$pkgname-$pkgver
+  export CFLAGS="-I/usr/local/include $CFLAGS"
+  export CXXFLAGS="-I/usr/local/include $CXXFLAGS"
+  export LDFLAGS="-L/usr/local/lib -lreadline $LDFLAGS" 
+  ./configure --prefix=/usr/local --with-openssl --disable-nls
+  make
+}
+
+package() {
+  cd $srcdir/$pkgname-$pkgver
+  make DESTDIR=$pkgdir install
+  rm -rf $pkgdir/usr/local/lib
+}
