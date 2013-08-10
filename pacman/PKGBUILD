@@ -1,0 +1,32 @@
+#!/bin/bash
+# Maintainer: Dan McGee <dan@archlinux.org>
+# Maintainer: Dave Reisner <dreisner@archlinux.org>
+
+_libarchive_version=`bsdtar --version | awk '{print $5}'`
+pkgname=pacman
+pkgver=4.0.3
+pkgrel=1
+pkgdesc="A library-based package manager with dependency support"
+arch=('i686' 'x86_64')
+groups=('base')
+depends=('fakeroot')
+url="http://www.archlinux.org/pacman/"
+license=('GPL')
+source=(ftp://ftp.archlinux.org/other/pacman/$pkgname-$pkgver.tar.gz
+        https://github.com/downloads/libarchive/libarchive/libarchive-$_libarchive_version.tar.gz)
+backup=(usr/local/etc/pacman.conf usr/local/etc/makepkg.conf)
+md5sums=('387965c7125e60e5f0b9ff3b427fe0f9'
+         'fe8d917e101d4b37580124030842a1d0')
+
+build() {
+  cd $srcdir/$pkgname-$pkgver
+  ./configure --prefix=/usr/local CFLAGS="-I$srcdir/libarchive-$_libarchive_version/libarchive/" LDFLAGS="-lcrypto" --disable-shared
+  make
+}
+
+package() {
+  cd $srcdir/$pkgname-$pkgver
+  make DESTDIR=$pkgdir install
+  sed 's|usr/{,share}/info/dir|usr/{,local/}{,share/}/info/dir|g' $pkgdir/usr/local/etc/makepkg.conf > $pkgdir/usr/local/etc/makepkg.conf.tmp
+  mv $pkgdir/usr/local/etc/makepkg.conf.tmp $pkgdir/usr/local/etc/makepkg.conf
+}
