@@ -10,7 +10,7 @@ set -e
 set -x
 bootstrap_fakeroot() {
   if [ ! -f $SRCDEST/fakeroot_$FAKEROOT.orig.tar.bz2 ]; then
-    curl -Lv http://ftp.debian.org/debian/pool/main/f/fakeroot/fakeroot_$FAKEROOT.orig.tar.bz2 -o $SRCDEST/fakeroot_$FAKEROOT.orig.tar.bz2
+    curl -q -Lv http://ftp.debian.org/debian/pool/main/f/fakeroot/fakeroot_$FAKEROOT.orig.tar.bz2 -o $SRCDEST/fakeroot_$FAKEROOT.orig.tar.bz2
   fi
   tar xf $SRCDEST/fakeroot_$FAKEROOT.orig.tar.bz2
   pushd fakeroot-$FAKEROOT
@@ -23,10 +23,10 @@ bootstrap_fakeroot() {
 
 bootstrap_pacman() {
   if [ ! -f $SRCDEST/libarchive-$LIBARCHIVE.tar.gz ]; then
-    curl -Lv http://www.libarchive.org/downloads/libarchive-$LIBARCHIVE.tar.gz -o $SRCDEST/libarchive-$LIBARCHIVE.tar.gz
+    curl -q -Lv http://www.libarchive.org/downloads/libarchive-$LIBARCHIVE.tar.gz -o $SRCDEST/libarchive-$LIBARCHIVE.tar.gz
   fi
   if [ ! -f $SRCDEST/pacman-$PACMAN.tar.gz ]; then
-    curl -Lv https://sources.archlinux.org/other/pacman/pacman-$PACMAN.tar.gz -o $SRCDEST/pacman-$PACMAN.tar.gz
+    curl -q -Lv https://sources.archlinux.org/other/pacman/pacman-$PACMAN.tar.gz -o $SRCDEST/pacman-$PACMAN.tar.gz
   fi
   tar xf $SRCDEST/libarchive-$LIBARCHIVE.tar.gz
   tar xf $SRCDEST/pacman-$PACMAN.tar.gz
