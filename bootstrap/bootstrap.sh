@@ -1,8 +1,8 @@
 #!/bin/bash
 
-SRCDEST=${:$PWD}
+SRCDEST=${SRCDEST:-$PWD}
 BOOTSTRAP=/tmp/bootstrap
-FAKEROOT=1.19
+FAKEROOT=1.18.4
 LIBARCHIVE=`bsdtar --version | awk '{print $5}'`
 PACMAN=4.0.3
 
@@ -14,21 +14,24 @@ bootstrap_fakeroot() {
   fi
   tar xf $SRCDEST/fakeroot_$FAKEROOT.orig.tar.bz2
   pushd fakeroot-$FAKEROOT
-  ./configure --prefix=$BOOTSTRAP
+  CFLAGS="-Wno-deprecated-declarations" ./configure --prefix=$BOOTSTRAP
+  echo '#undef HAVE_OPENAT' >> config.h
   make
   make install
   popd
 }
 
 bootstrap_pacman() {
+  if [ ! -f $SRCDEST/libarchive-$LIBARCHIVE.tar.gz ]; then
+    curl -Lv http://www.libarchive.org/downloads/libarchive-$LIBARCHIVE.tar.gz -o $SRCDEST/libarchive-$LIBARCHIVE.tar.gz
+  fi
   if [ ! -f $SRCDEST/pacman-$PACMAN.tar.gz ]; then
-    curl -Lv https://github.com/downloads/libarchive/libarchive/libarchive-$LIBARCHIVE.tar.gz -o $SRCDEST/libarchive-$LIBARCHIVE.tar.gz
-    curl -Lv ftp://ftp.archlinux.org/other/pacman/pacman-$PACMAN.tar.gz -o $SRCDEST/pacman-$PACMAN.tar.gz
+    curl -Lv https://sources.archlinux.org/other/pacman/pacman-$PACMAN.tar.gz -o $SRCDEST/pacman-$PACMAN.tar.gz
   fi
   tar xf $SRCDEST/libarchive-$LIBARCHIVE.tar.gz
   tar xf $SRCDEST/pacman-$PACMAN.tar.gz
   pushd pacman-$PACMAN
-  ./configure --prefix=$BOOTSTRAP CFLAGS="-I$PWD/../libarchive-$LIBARCHIVE/libarchive/" LDFLAGS="-lcrypto" --disable-shared
+  ./configure --prefix=$BOOTSTRAP CFLAGS="-I$PWD/../libarchive-$LIBARCHIVE/libarchive/" --without-openssl --disable-shared
   make
   make install
   popd

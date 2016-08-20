@@ -6,7 +6,7 @@ set -x
 BOOTSTRAP=/tmp/bootstrap
 export PATH=$PATH:$BOOTSTRAP/bin
 
-makepkg -f
+makepkg -d -f
 
 DBPATH=/usr/local/var/lib/pacman
 sudo mkdir -p $DBPATH

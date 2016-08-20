@@ -12,7 +12,7 @@ groups=('base')
 depends=('fakeroot')
 url="http://www.archlinux.org/pacman/"
 license=('GPL')
-source=(ftp://ftp.archlinux.org/other/pacman/$pkgname-$pkgver.tar.gz
+source=(https://sources.archlinux.org/other/pacman/$pkgname-$pkgver.tar.gz
         https://github.com/downloads/libarchive/libarchive/libarchive-$_libarchive_version.tar.gz)
 backup=(usr/local/etc/pacman.conf usr/local/etc/makepkg.conf)
 md5sums=('387965c7125e60e5f0b9ff3b427fe0f9'
@@ -20,7 +20,7 @@ md5sums=('387965c7125e60e5f0b9ff3b427fe0f9'
 
 build() {
   cd $srcdir/$pkgname-$pkgver
-  ./configure --prefix=/usr/local CFLAGS="-I$srcdir/libarchive-$_libarchive_version/libarchive/" LDFLAGS="-lcrypto" --disable-shared
+  ./configure --prefix=/usr/local CFLAGS="-I$srcdir/libarchive-$_libarchive_version/libarchive/" --without-openssl --disable-shared
   make
 }
 
