@@ -31,6 +31,7 @@ bootstrap_pacman() {
   tar xf $SRCDEST/libarchive-$LIBARCHIVE.tar.gz
   tar xf $SRCDEST/pacman-$PACMAN.tar.gz
   pushd pacman-$PACMAN
+  patch -p0 < ../../pacman/csrutil.patch
   ./configure --prefix=$BOOTSTRAP CFLAGS="-I$PWD/../libarchive-$LIBARCHIVE/libarchive/" --without-openssl --disable-shared
   make
   make install
@@ -42,5 +43,16 @@ mkdir -p $SRCDEST
 rm -rf $BOOTSTRAP
 mkdir -p $BOOTSTRAP
 
+pushd `dirname $0`
 bootstrap_fakeroot
 bootstrap_pacman
+
+pushd ../fakeroot
+bash bootstrap.sh
+popd
+
+pushd ../pacman
+bash bootstrap.sh
+popd
+
+popd

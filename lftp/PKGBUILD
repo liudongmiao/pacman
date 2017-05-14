@@ -1,7 +1,7 @@
 #!/bin/bash
 
 pkgname=lftp
-pkgver=4.4.8
+pkgver=4.7.3
 pkgrel=1
 pkgdesc="Sophisticated command line based FTP client"
 arch=('i686' 'x86_64')
@@ -9,14 +9,17 @@ license=('GPL3')
 url="http://lftp.yar.ru/"
 backup=(usr/local/etc/lftp.conf)
 makedepends=('readline>6.0')
-source=(http://ftp.yars.free.net/pub/source/lftp/$pkgname-$pkgver.tar.bz2)
-md5sums=('7140263fbe12f17f74183cf065a7d381')
+source=(http://lftp.yar.ru/ftp/$pkgname-$pkgver.tar.bz2
+        openssl.patch)
+md5sums=('738f0c407d7228a139afa58cedc17dad'
+         '46dae78dd0f208a5aa64f629f1d3ce00')
 
 build() {
   cd $srcdir/$pkgname-$pkgver
   export CFLAGS="-I/usr/local/include $CFLAGS"
   export CXXFLAGS="-I/usr/local/include $CXXFLAGS"
   export LDFLAGS="-L/usr/local/lib -lreadline $LDFLAGS" 
+  patch -p0 < $srcdir/openssl.patch
   ./configure --prefix=/usr/local --with-openssl --disable-nls
   make
 }

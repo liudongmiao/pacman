@@ -1,20 +1,22 @@
 #!/bin/bash
 
 pkgname=wget
-pkgver=1.14
+pkgver=1.19.1
 pkgrel=1
 pkgdesc="A network utility to retrieve files from the Web"
 arch=('i686' 'x86_64')
 url="http://www.gnu.org/software/wget/wget.html"
 license=('GPL3')
 backup=(usr/local/etc/wgetrc)
+makedepends=('openssl')
 source=(ftp://ftp.gnu.org/gnu/$pkgname/$pkgname-$pkgver.tar.gz)
 install=wget.install
-md5sums=('12edc291dba8127f2e9696e69f36299e')
+md5sums=('87cea36b7161fd43e3fd51a4e8b89689')
 
 build() {
   cd $srcdir/$pkgname-$pkgver
-  ./configure -with-ssl=openssl --prefix=/usr/local --disable-nls
+  OPENSSL_CFLAGS="-I/usr/local/include" OPENSSL_LIBS="-lcrypto -lssl" \
+    ./configure -with-ssl=openssl --prefix=/usr/local --disable-nls
   make
 }
 

@@ -1,0 +1,12 @@
+--- lib/libalpm/be_local.c~	2017-05-14 08:38:55.000000000 +0800
++++ lib/libalpm/be_local.c	2017-05-14 08:39:40.000000000 +0800
+@@ -642,6 +642,9 @@ static int local_db_read(alpm_pkg_t *inf
+ 				alpm_file_t *files = NULL;
+ 
+ 				while(fgets(line, sizeof(line), fp) && _alpm_strip_newline(line)) {
++					if (!strcmp(line, "usr/")) {
++					    continue;
++					}
+ 					if(files_count >= files_size) {
+ 						size_t old_size = files_size;
+ 						if(files_size == 0) {

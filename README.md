@@ -16,9 +16,7 @@ Howto install?
 
 2. just run `bootstrap/bootstrap.sh`, which will install `pacman` to `/tmp/bootsrap`.
 
-3. run `fakeroot/bootstrap.sh` and `pacman/bootstrap.sh`, will install `pacman` to `/usr/local`
-
-4. then you can `makepkg -i` like in [Arch Linux][arch] now.
+3. then you can `makepkg -i` like in [Arch Linux][arch] now.
 
 [macports]: http://www.macports.org "Mac Ports"
 [homebrew]: http://homebrew.sh "Homebrew"

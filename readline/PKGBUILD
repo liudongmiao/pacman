@@ -1,12 +1,12 @@
 #!/bin/bash
 
 pkgname=readline
-_basever=6.2
-_patchlevel=004
+_basever=7.0
+_patchlevel=003
 pkgver=$_basever.$_patchlevel
 pkgrel=1
 pkgdesc="GNU readline library"
-arch=(any)
+arch=('i686' 'x86_64')
 url="http://tiswww.case.edu/php/chet/readline/rltop.html"
 license=('GPL')
 options=('!emptydirs')
@@ -17,57 +17,21 @@ if [ $_patchlevel -gt 00 ]; then
         source=(${source[@]} http://ftp.gnu.org/gnu/$pkgname/$pkgname-$_basever-patches/$pkgname${_basever//./}-$(printf "%03d" $p))
     done
 fi
-
-md5sums=('67948acb2ca081f23359d0256e9a271c'
-         '83287d52a482f790dfb30ec0a8746669'
-         '0665020ea118e8434bd145fb71f452cc'
-         'c9d5d79718856e711667dede87cb7622'
-         'c08e787f50579ce301075c523fa660a4')
-
-backup() {
-  mv $1 $1.$2
-}
-
-universal() {
-  echo "#ifdef __x86_64__" > $1
-  cat $1.x86_64 >> $1
-  echo "#else" >> $1
-  cat $1.i386 >> $1
-  echo "#endif" >> $1
-}
+md5sums=('205b03a87fc83dab653b628c59b9fc91'
+         'e299384458a4cbefaaac3f30e9cc2bba'
+         'f9071a353e2fd52a91d32667b23715d6'
+         '03595464cf0283286a6e07f4f01c4a70')
 
 build() {
-  cd ${srcdir}/${pkgname}-${_basever}
+  cd $srcdir/$pkgname-$_basever
   for (( p=1; p<=$((10#${_patchlevel})); p++ )); do
     msg "applying patch ${pkgname}${_basever//./}-$(printf "%03d" $p)"
     patch -Np0 -i $srcdir/${pkgname}${_basever//./}-$(printf "%03d" $p)
   done
 
-  config="--prefix=/usr/local --enable-static --disable-shared"
-  export CC="clang"
-  export CXX="clang++"
-
-  old=`mktemp $pkgname.XXXXXX`
-  CC="$CC -arch i386" CXX="$CXX -arch i386" \
-    ./configure ${config}
-  HEADERS=`find * -newer $old -name "*.h"`
-  rm -f $old
-  for header in $HEADERS; do
-    msg "backup $header i386"
-    backup $header i386
-  done
-
-  make distclean
-  ./configure ${config}
-  for header in $HEADERS; do
-    if ! cmp $header.i386 $header >/dev/null; then
-      backup $header x86_64
-      msg "universal $header"
-      universal $header
-    fi
-  done
-
-  make CFLAGS="$CFLAGS -arch i386 -arch x86_64" CXXFLAGS="$CXXFLAGS -arch i386 -arch x86_64"
+  [[ $CARCH == "x86_64" ]] && CFLAGS="$CFLAGS -fPIC"
+  ./configure --prefix=/usr/local --enable-static --disable-shared
+  make
 }
 
 package() {

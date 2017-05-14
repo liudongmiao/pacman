@@ -1,0 +1,38 @@
+# $Id$
+# Maintainer: Sébastien "Seblu" Luttringer
+# Contributor: Allan McRae <allan@archlinux.org>
+# Contributor: Eric Belanger <eric@archlinux.org>
+# Contributor: John Proctor <jproctor@prium.net>
+
+pkgname=pcre
+pkgver=8.40
+pkgrel=1
+pkgdesc='A library that implements Perl 5-style regular expressions'
+arch=('i686' 'x86_64')
+url='http://www.pcre.org/'
+license=('BSD')
+# depends=('gcc-libs' 'readline' 'zlib' 'bzip2' 'bash')
+# validpgpkeys=('45F68D54BBE23FB3039B46E59766E084FB0F43D8') # Philip Hazel
+source=("https://ftp.csx.cam.ac.uk/pub/software/programming/pcre/$pkgname-$pkgver.tar.bz2")
+md5sums=('41a842bf7dcecd6634219336e2167d1d')
+
+build() {
+  cd $pkgname-$pkgver
+  ./configure --disable-shared \
+        --enable-unicode-properties \
+        --enable-pcre16 \
+        --enable-pcre32 \
+        --enable-jit \
+        --enable-pcregrep-libz \
+        --enable-pcregrep-libbz2
+  make
+}
+
+package() {
+  cd $pkgname-$pkgver
+  make DESTDIR="$pkgdir" install
+  # remove the usage of pthread
+  sed -i "" -e 's|-pthread||g' $pkgdir/usr/local/lib/pkgconfig/*.pc $pkgdir/usr/local/lib/*.la
+}
+
+# vim:set ts=2 sw=2 et:

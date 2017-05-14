@@ -1,0 +1,20 @@
+pkgname=openssl
+pkgver=`openssl version | awk '{print $2}'`
+pkgrel=1
+pkgdesc='The Open Source toolkit for Secure Sockets Layer and Transport Layer Security'
+arch=('any')
+url='https://www.openssl.org'
+license=('custom:BSD')
+options=('!makeflags' '!emptydirs')
+source=("https://www.openssl.org/source/${pkgname}-${pkgver}.tar.gz")
+md5sums=('c813c065dd53d7bd0a560a870ddd0af5')
+
+build() {
+    cd $srcdir/$pkgname-$pkgver
+    make INSTALLTOP=/usr/local libcrypto.pc libssl.pc openssl.pc
+}
+
+package() {
+    cd $srcdir/$pkgname-$pkgver
+    make INSTALL_PREFIX=$pkgdir INSTALLTOP=/usr/local LIBS= DIRS="crypto ssl" install_sw
+}
