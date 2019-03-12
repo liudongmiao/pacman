@@ -1,23 +1,22 @@
 #!/bin/bash
-# Maintainer: Dan McGee <dan@archlinux.org>
-# Maintainer: Dave Reisner <dreisner@archlinux.org>
+# Maintainer: Liu Dongmiao <liudongmiao@gmail.com>
 
 _libarchive_version=`bsdtar --version | awk '{print $5}'`
 pkgname=pacman
 pkgver=4.0.3
 pkgrel=1
 pkgdesc="A library-based package manager with dependency support"
-arch=('i686' 'x86_64')
+arch=('x86_64')
 groups=('base')
 depends=('fakeroot')
 url="http://www.archlinux.org/pacman/"
 license=('GPL')
 source=(https://sources.archlinux.org/other/pacman/$pkgname-$pkgver.tar.gz
-        https://github.com/downloads/libarchive/libarchive/libarchive-$_libarchive_version.tar.gz
+        https://www.libarchive.org/downloads/libarchive-$_libarchive_version.tar.gz
         csrutil.patch)
 backup=(usr/local/etc/pacman.conf usr/local/etc/makepkg.conf)
 md5sums=('387965c7125e60e5f0b9ff3b427fe0f9'
-         'fe8d917e101d4b37580124030842a1d0'
+         'c96040b75a14c8ba73238c284147e87f'
          '1fb1b5fc4f345c63d8c3d84f3fb57715')
 
 build() {
@@ -30,6 +29,5 @@ build() {
 package() {
   cd $srcdir/$pkgname-$pkgver
   make DESTDIR=$pkgdir install
-  sed 's|usr/{,share}/info/dir|usr/{,local/}{,share/}/info/dir|g' $pkgdir/usr/local/etc/makepkg.conf > $pkgdir/usr/local/etc/makepkg.conf.tmp
-  mv $pkgdir/usr/local/etc/makepkg.conf.tmp $pkgdir/usr/local/etc/makepkg.conf
+  sed -i '' -e 's|usr/{,share}/info/dir|usr/{,local/}{,share/}/info/dir|g' -e 's|/usr/bin/curl -f|/usr/bin/curl -q -f|g' $pkgdir/usr/local/etc/makepkg.conf
 }

@@ -2,20 +2,20 @@
 
 SRCDEST=${SRCDEST:-$PWD}
 BOOTSTRAP=/tmp/bootstrap
-FAKEROOT=1.18.4
+FAKEROOT=1.26
 LIBARCHIVE=`bsdtar --version | awk '{print $5}'`
 PACMAN=4.0.3
 
 set -e
 set -x
+
 bootstrap_fakeroot() {
   if [ ! -f $SRCDEST/fakeroot_$FAKEROOT.orig.tar.bz2 ]; then
-    curl -q -Lv http://ftp.debian.org/debian/pool/main/f/fakeroot/fakeroot_$FAKEROOT.orig.tar.bz2 -o $SRCDEST/fakeroot_$FAKEROOT.orig.tar.bz2
+    curl -q -Lv https://deb.debian.org/debian/pool/main/f/fakeroot/fakeroot_$FAKEROOT.orig.tar.gz -o $SRCDEST/fakeroot_$FAKEROOT.orig.tar.gz
   fi
-  tar xf $SRCDEST/fakeroot_$FAKEROOT.orig.tar.bz2
+  tar xf $SRCDEST/fakeroot_$FAKEROOT.orig.tar.gz
   pushd fakeroot-$FAKEROOT
-  CFLAGS="-Wno-deprecated-declarations" ./configure --prefix=$BOOTSTRAP
-  echo '#undef HAVE_OPENAT' >> config.h
+  CFLAGS="-Wno-implicit-function-declaration" ./configure --prefix=$BOOTSTRAP
   make
   make install
   popd

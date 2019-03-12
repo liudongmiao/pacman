@@ -1,12 +1,12 @@
-pacman for Mac OS X.
+pacman for macOS.
 
-There are [Mac Ports][macports] and [Homebrew][homebrew], and other package management for Mac OS X.  
+There are [Mac Ports][macports] and [Homebrew][homebrew], and other package management for macOS.  
 However, as a [pre-Archer][arch], consider [pacman][pacman] the fastest package management utilities.
 
-For most of [packages][packages] in Arch Linux, or [AUR][aur], should be support in Mac OS X.  
+For most of [packages][packages] in Arch Linux, or [AUR][aur], should be support in macOS.  
 However, there may be changed, for example, Arch Linux install to `/usr` and `/etc` instead of `/usr/local`.
 
-Howto install?
+How to install?
 
 1. (optional) define SRCDEST, PKGDEST, PACKAGER in `~/.bash_profile`.  
 
