@@ -35,6 +35,7 @@ bootstrap_pacman() {
   ./configure --prefix=$BOOTSTRAP CFLAGS="-I$PWD/../libarchive-$LIBARCHIVE/libarchive/" --without-openssl --disable-shared
   make
   make install
+  sed -i -e 's|^CheckSpace|#CheckSpace|g' $BOOTSTRAP/etc/pacman.conf
   popd
 }
 

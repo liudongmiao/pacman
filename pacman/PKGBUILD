@@ -30,4 +30,5 @@ package() {
   cd $srcdir/$pkgname-$pkgver
   make DESTDIR=$pkgdir install
   sed -i '' -e 's|usr/{,share}/info/dir|usr/{,local/}{,share/}/info/dir|g' -e 's|/usr/bin/curl -f|/usr/bin/curl -q -f|g' $pkgdir/usr/local/etc/makepkg.conf
+  sed -i '' -e 's|^CheckSpace|#CheckSpace|g' $pkgdir/usr/local/etc/pacman.conf
 }
