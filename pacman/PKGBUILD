@@ -4,7 +4,7 @@
 _libarchive_version=`bsdtar --version | awk '{print $5}'`
 pkgname=pacman
 pkgver=4.0.3
-pkgrel=1
+pkgrel=2
 pkgdesc="A library-based package manager with dependency support"
 arch=('x86_64')
 groups=('base')
@@ -13,16 +13,22 @@ url="http://www.archlinux.org/pacman/"
 license=('GPL')
 source=(https://sources.archlinux.org/other/pacman/$pkgname-$pkgver.tar.gz
         https://www.libarchive.org/downloads/libarchive-$_libarchive_version.tar.gz
-        csrutil.patch)
+        csrutil.patch
+        57e0639-skip.patch
+        065b7f8-prepare.patch)
 backup=(usr/local/etc/pacman.conf usr/local/etc/makepkg.conf)
 md5sums=('387965c7125e60e5f0b9ff3b427fe0f9'
          'c96040b75a14c8ba73238c284147e87f'
-         '1fb1b5fc4f345c63d8c3d84f3fb57715')
+         '1fb1b5fc4f345c63d8c3d84f3fb57715'
+         '3e3df1d12abd3d52f18e93f84b9dadab'
+         '9792d88a24bb32486fe5f0bbc4db91f0')
 
 build() {
   cd $srcdir/$pkgname-$pkgver
   patch -p0 < $srcdir/csrutil.patch
-  ./configure --prefix=/usr/local CFLAGS="-I$srcdir/libarchive-$_libarchive_version/libarchive/" --without-openssl --disable-shared
+  patch -p1 < $srcdir/57e0639-skip.patch
+  patch -p1 < $srcdir/065b7f8-prepare.patch
+  ./configure --prefix=/usr/local CFLAGS="-I$srcdir/libarchive-$_libarchive_version/libarchive/" --without-openssl --without-gpgme --disable-shared
   make
 }
 

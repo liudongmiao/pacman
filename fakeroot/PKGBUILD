@@ -2,7 +2,7 @@
 # Maintainer: Liu Dongmiao <liudongmiao@gmail.com>
 
 pkgname=fakeroot
-pkgver=1.26
+pkgver=1.28
 pkgrel=1
 pkgdesc="Gives a fake root environment"
 arch=('x86_64')
@@ -12,7 +12,7 @@ groups=('base-devel')
 depends=()
 options=('!libtool')
 source=(https://deb.debian.org/debian/pool/main/f/$pkgname/${pkgname}_${pkgver}.orig.tar.gz)
-md5sums=('cb1c68f2597f0a064232a841050eb6f2')
+md5sums=('75663fa4d0d1eedab0b951bb977bc12f')
 
 build() {
   cd $srcdir/$pkgname-$pkgver

@@ -1,0 +1,54 @@
+commit 065b7f863a25dac3699c23258b986312f4caac1c
+Author: Enjolras <0enjolras0@laposte.net>
+Date:   Sat Jul 28 11:20:10 2012 +0200
+
+    Add a function prepare() to PKGBUILD
+    
+    prepare is run after the source extraction, and is not run with
+    --noextract option.
+    
+    Signed-off-by: Dan McGee <dan@archlinux.org>
+
+diff --git a/scripts/makepkg.sh.in b/scripts/makepkg.sh.in
+index 3b281124..6f7de278 100644
+--- a/scripts/makepkg.sh.in
++++ b/scripts/makepkg.sh.in
+@@ -71,6 +71,7 @@ LOGGING=0
+ SOURCEONLY=0
+ IGNOREARCH=0
+ HOLDVER=0
++PREPAREFUNC=0
+ BUILDFUNC=0
+ CHECKFUNC=0
+ PKGFUNC=0
+@@ -1005,6 +1006,10 @@ run_function() {
+ 	eval "$shellopts"
+ }
+ 
++run_prepare() {
++	run_function "prepare"
++}
++
+ run_build() {
+ 	# use distcc if it is requested (check buildenv and PKGBUILD opts)
+ 	if check_buildenv "distcc" "y" && ! check_option "distc" "n"; then
+@@ -2285,6 +2290,9 @@ if (( ${#pkgname[@]} > 1 )); then
+ fi
+ 
+ # test for available PKGBUILD functions
++if declare -f prepare >/dev/null; then
++	PREPAREFUNC=1
++fi
+ if declare -f build >/dev/null; then
+ 	BUILDFUNC=1
+ fi
+@@ -2496,6 +2504,9 @@ else
+ 	download_sources
+ 	check_source_integrity
+ 	extract_sources
++	if (( PREPAREFUNC )); then
++		run_prepare
++	fi
+ fi
+ 
+ if (( NOBUILD )); then

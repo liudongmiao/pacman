@@ -2,7 +2,7 @@
 
 SRCDEST=${SRCDEST:-$PWD}
 BOOTSTRAP=/tmp/bootstrap
-FAKEROOT=1.26
+FAKEROOT=1.28
 LIBARCHIVE=`bsdtar --version | awk '{print $5}'`
 PACMAN=4.0.3
 
@@ -10,7 +10,7 @@ set -e
 set -x
 
 bootstrap_fakeroot() {
-  if [ ! -f $SRCDEST/fakeroot_$FAKEROOT.orig.tar.bz2 ]; then
+  if [ ! -f $SRCDEST/fakeroot_$FAKEROOT.orig.tar.gz ]; then
     curl -q -Lv https://deb.debian.org/debian/pool/main/f/fakeroot/fakeroot_$FAKEROOT.orig.tar.gz -o $SRCDEST/fakeroot_$FAKEROOT.orig.tar.gz
   fi
   tar xf $SRCDEST/fakeroot_$FAKEROOT.orig.tar.gz
@@ -32,7 +32,7 @@ bootstrap_pacman() {
   tar xf $SRCDEST/pacman-$PACMAN.tar.gz
   pushd pacman-$PACMAN
   patch -p0 < ../../pacman/csrutil.patch
-  ./configure --prefix=$BOOTSTRAP CFLAGS="-I$PWD/../libarchive-$LIBARCHIVE/libarchive/" --without-openssl --disable-shared
+  ./configure --prefix=$BOOTSTRAP CFLAGS="-I$PWD/../libarchive-$LIBARCHIVE/libarchive/" --without-openssl --without-gpgme --disable-shared
   make
   make install
   sed -i -e 's|^CheckSpace|#CheckSpace|g' $BOOTSTRAP/etc/pacman.conf
