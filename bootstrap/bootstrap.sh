@@ -2,7 +2,7 @@
 
 SRCDEST=${SRCDEST:-$PWD}
 BOOTSTRAP=/tmp/bootstrap
-FAKEROOT=1.28
+FAKEROOT=1.31
 LIBARCHIVE=`bsdtar --version | awk '{print $5}'`
 PACMAN=4.0.3
 
