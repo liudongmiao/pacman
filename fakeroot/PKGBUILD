@@ -12,7 +12,7 @@ groups=('base-devel')
 depends=()
 options=('!libtool')
 source=(https://deb.debian.org/debian/pool/main/f/$pkgname/${pkgname}_${pkgver}.orig.tar.gz)
-md5sums=('75663fa4d0d1eedab0b951bb977bc12f')
+md5sums=('e55630a66f305950044970f033127d70')
 
 build() {
   cd $srcdir/$pkgname-$pkgver
