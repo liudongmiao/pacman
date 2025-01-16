@@ -32,7 +32,8 @@ bootstrap_pacman() {
   tar xf $SRCDEST/pacman-$PACMAN.tar.gz
   pushd pacman-$PACMAN
   patch -p0 < ../../pacman/csrutil.patch
-  ./configure --prefix=$BOOTSTRAP CFLAGS="-I$PWD/../libarchive-$LIBARCHIVE/libarchive/" --without-openssl --without-gpgme --disable-shared
+  target=`clang -v 2>&1 | grep apple-darwin | awk '{print $NF}'`
+  ./configure --prefix=$BOOTSTRAP CFLAGS="-I$PWD/../libarchive-$LIBARCHIVE/libarchive/" ac_cv_host=$target ac_cv_build=$target --without-openssl --without-gpgme --disable-shared
   make
   make install
   sed -i -e 's|^CheckSpace|#CheckSpace|g' $BOOTSTRAP/etc/pacman.conf
